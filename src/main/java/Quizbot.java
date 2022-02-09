@@ -132,11 +132,12 @@ public class Quizbot extends TelegramLongPollingBot {
                             preparedStatement.setString(2, message.getFrom().getUserName());
                             ResultSet records = preparedStatement.executeQuery();
                             Statement statement = connection.createStatement();
-                            if (!records.next()){
-                                Timestamp timestamp = new Timestamp(new Date().getTime());
-                                statement.execute(String.format("insert into users(user_id, username, paid, admin, date) values (%d, '%s', true, false, '%s') on conflict do nothing", message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
-                            }
-                            //if (records.next() && !records.getBoolean("paid")) {
+                            if (records.next() || !records.next()) {
+                                if (!records.next()) {
+                                    Timestamp timestamp = new Timestamp(new Date().getTime());
+                                    statement.execute(String.format("insert into users(user_id, username, paid, admin, date) values (%d, '%s', true, false, '%s') on conflict do nothing", message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
+                                }
+                                //if (records.next() && !records.getBoolean("paid")) {
                                 language.put(message.getChatId(), records.getString("lang"));
                                 ResultSet subs = statement.executeQuery(String.format("select name from subjects where lang = '%s'", language.get(message.getChatId())));
                                 while (subs.next()) {
@@ -148,10 +149,11 @@ public class Quizbot extends TelegramLongPollingBot {
                                     if (subjects.stream().noneMatch(element -> element.getCaption().equals("Добавить предмет")))
                                         subjects.add(new Item(translate("Добавить предмет", language.get(message.getChatId())), "add2+subject"));
                                 sendMessage(message.getChatId(), translate("\uD83D\uDCDA Выберите предмет:", language.get(message.getChatId())), buildMarkup(subjects, 1));
-                            // } else {
-                              //  sendMessage(message.getChatId(), translate("Пожалуйста, свяжитесь с @meirbnb чтобы приобрести подписку.", language.get(message.getChatId())));
+                                // } else {
+                                //  sendMessage(message.getChatId(), translate("Пожалуйста, свяжитесь с @meirbnb чтобы приобрести подписку.", language.get(message.getChatId())));
                                 //Statement statement = connection.createStatement();
-                            //}
+                                //}
+                            }
                         } catch (SQLException ex) {
                             System.out.println(ex.getMessage());
                         }
