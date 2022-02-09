@@ -116,8 +116,7 @@ public class Quizbot extends TelegramLongPollingBot {
             }
             Message message = update.getMessage();
             if (message.hasText()) {
-                switch (message.getText()) {
-                    case "/start" -> {
+                if (message.getText().equals("/start")) {
                         System.out.println("User started the bot");
                         subjects.clear();
                         state.remove(message.getChatId());
@@ -154,15 +153,13 @@ public class Quizbot extends TelegramLongPollingBot {
                         } catch (SQLException ex) {
                             System.out.println(ex.getMessage());
                         }
-                    }
-                    case "/lang" -> {
+                    } else if (message.getText().equals("/lang")){
                         List<Item>langs = new ArrayList<>();
                         langs.add(new Item("\uD83C\uDDF0\uD83C\uDDFF Қазақша", "changeLang+kaz"));
                         langs.add(new Item("\uD83C\uDDF7\uD83C\uDDFA Русский", "changeLang+rus"));
                         langs.add(new Item("\uD83C\uDDFA\uD83C\uDDF8 English", "changeLang+eng"));
                         sendMessage(message.getChatId(), translate("Выберите язык бота:", language.get(message.getChatId())), buildMarkup(langs, 1));
-                    }
-                    case "/statistics" -> {
+                    } else if (message.getText().equals("/statistics")){
                         Connection connection;
                         if (connections.containsKey(message.getChatId()))
                             connection = connections.get(message.getChatId());
@@ -200,8 +197,7 @@ public class Quizbot extends TelegramLongPollingBot {
                         } catch (SQLException | ParseException e) {
                             e.printStackTrace();
                         }
-                    }
-                    case "/cancel" -> {
+                    } else if (message.getText().equals("/cancel")){
                         subjects.clear();
                         state.remove(message.getChatId());
                         quiz.remove(message.getChatId());
@@ -223,8 +219,7 @@ public class Quizbot extends TelegramLongPollingBot {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                    }
-                    default -> {
+                    } else {
                         if (!state.isEmpty() && state.get(message.getChatId()).equals("waiting4subject")) {
                             if (subjects.stream().noneMatch(element -> element.getCaption().equals(message.getText()))) {
                                 Item addSubjectBtn = subjects.stream().filter(element -> element.getCaption().equals(translate("Добавить предмет", language.get(message.getChatId())))).findFirst().get();
@@ -274,8 +269,7 @@ public class Quizbot extends TelegramLongPollingBot {
                         }
                     }
                 }
-            }
-        } else if (update.hasPoll()) {
+            } else if (update.hasPoll()) {
             Poll poll = update.getPoll();
             String question = poll.getQuestion();
             String correct = poll.getOptions().get(poll.getCorrectOptionId()).getText();
@@ -289,7 +283,7 @@ public class Quizbot extends TelegramLongPollingBot {
                 return;
             if (quiz.get(chat_id).isEmpty()) {
                 long elapsed = (System.currentTimeMillis() - stats.get(chat_id).getSecond()) / 1000;
-                var percentage = stats.get(chat_id).getFirst();
+                int percentage = stats.get(chat_id).getFirst();
                 if (percentage == 15)
                     sendSticker(chat_id, "CAACAgIAAxkBAAEDpi1h2umfYElqefRxM_T2vEtA-eiX2AACewADwZxgDNsaH7YdVDaIIwQ");
                 else if (percentage > 5)
@@ -346,14 +340,13 @@ public class Quizbot extends TelegramLongPollingBot {
             if (queryData.contains("+")) {
                 selectedSubject = queryData.substring(1 + queryData.indexOf("+"));
                 queryData = queryData.substring(0, queryData.indexOf("+"));
-                switch (queryData){
-                    case "test" -> {
+                if (queryData.equals("test")){
                         if (subjects.isEmpty())
                             return;
                         List<Question> test = LoadTest(callbackQuery.getFrom().getId(), selectedSubject, language.get(chat_id));
                         if (test.isEmpty()){
                             editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("Тесты по предмету <b>%s</b> не найдены.\nОбратитесь к своему преподавателю", language.get(chat_id)).formatted(selectedSubject), null);
-                            break;
+                            return;
                         }
                         quiz.put(chat_id, test);
                         Question current = quiz.get(chat_id).get(0);
@@ -365,16 +358,14 @@ public class Quizbot extends TelegramLongPollingBot {
                         stats.putIfAbsent(chat_id, new Pair<>(0, System.currentTimeMillis()));
                         Message message = callbackQuery.getMessage();
                         editMessage(chat_id, message.getMessageId(), message.getText(), null);
-                    }
-                    case "add" -> {
+                    } else if (queryData.equals("add")){
                         if (subjects.isEmpty())
                             return;
                         String sampleId = "BQACAgIAAxkBAAICb2HZrJpLAsqZRxMk_kJ4PupboJwvAAKNEQACEkXRSsxMo-neQlv9IwQ";
                         deleteMessage(chat_id, callbackQuery.getMessage().getMessageId());
                         sendTestSample(chat_id, translate("Отправьте тест в формате DOCX согласно прикрепленному шаблону", language.get(chat_id)), sampleId);
                         state.put(chat_id, "waiting4"+selectedSubject);
-                    }
-                    case "remove" -> {
+                    } else if (queryData.equals("remove")){
                         if (subjects.isEmpty())
                             return;
                         Connection connection;
@@ -393,14 +384,12 @@ public class Quizbot extends TelegramLongPollingBot {
                         editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("Предмет <b>%s</b> удалён ✅", language.get(chat_id)).formatted(selectedSubject), null);
                         sendMessage(chat_id, translate("\uD83D\uDCDA Выберите предмет:", language.get(chat_id)), buildMarkup(subjects, 1));
 
-                    }
-                    case "add2" -> {
+                    } else if (queryData.equals("add2")){
                         if (subjects.isEmpty())
                             return;
                         editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("✏️ Укажите называнию предмета:", language.get(chat_id)), null);
                         state.put(chat_id, "waiting4subject");
-                    }
-                    case "reportError" -> {
+                    } else if (queryData.equals("reportError")){
                         if (subjects.isEmpty())
                             return;
                         Connection connection;
@@ -428,24 +417,21 @@ public class Quizbot extends TelegramLongPollingBot {
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-                    }
-                    case "changeQuestion" -> {
+                    } else if (queryData.equals("changeQuestion")){
                         if (subjects.isEmpty())
                             return;
                         int messageId = callbackQuery.getMessage().getMessageId();
                         String messageText = callbackQuery.getMessage().getText();
                         editMessage(chat_id, messageId, messageText+translate("\n\n<i>Укажите корректный вопрос:</i>", language.get(chat_id)), null);
                         state.put(chat_id, "waiting4fixquestion+"+selectedSubject);
-                    }
-                    case "changeAnswer" -> {
+                    } else if (queryData.equals("changeAnswer")){
                         if (subjects.isEmpty())
                             return;
                         int messageId = callbackQuery.getMessage().getMessageId();
                         String messageText = callbackQuery.getMessage().getText();
                         editMessage(chat_id, messageId, messageText+translate("\n\n<i>Укажите корректный ответ:</i>", language.get(chat_id)), null);
                         state.put(chat_id, "waiting4fixanswer+"+selectedSubject);
-                    }
-                    case "changeLang" -> {
+                    } else if (queryData.equals("changeLang")){
                         callbackQuery = update.getCallbackQuery();
                         if (selectedSubject.equals("rus"))
                             editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Функция изменение языка работы бота будет скоро добавлена!\nПросим извинения за неудобства. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
@@ -453,14 +439,12 @@ public class Quizbot extends TelegramLongPollingBot {
                             editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Changing language of the bot will be available soon.\nSorry for causing inconveniences. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
                         else
                             editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Тілді өзгерту жақын арада мүмкін болады.\nҚолайсыздықтар үшін кешірім сұраймыз. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
-                    }
-                    case "stats" -> {
+                    } else if (queryData.equals("stats")){
                         if (subjects.isEmpty())
                             return;
                         LoadStats(callbackQuery, selectedSubject);
                     }
-                }
-            } else {
+                } else {
                 boolean isAdmin = false;
                 try {
                     Connection connection;
