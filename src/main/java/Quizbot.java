@@ -89,16 +89,16 @@ public class Quizbot extends TelegramLongPollingBot {
                     document.close();
                     Files.delete(Path.of(finalPath));
                     Statement statement = connections.get(chat_id).createStatement();
-                    ResultSet resultSet = statement.executeQuery("select id from subjects where name = '%s'".formatted(selectedSubject));
+                    ResultSet resultSet = statement.executeQuery(String.format("select id from subjects where name = '%s'",selectedSubject));
                     int subject_id = 0, uid = 0;
                     if (resultSet.next())
                         subject_id = resultSet.getInt(1);
-                    ResultSet resultSet2 = statement.executeQuery("select id from users where username = '%s' or user_id = %d".formatted(update.getMessage().getFrom().getUserName(), update.getMessage().getFrom().getId()));
+                    ResultSet resultSet2 = statement.executeQuery(String.format("select id from users where username = '%s' or user_id = %d", update.getMessage().getFrom().getUserName(), update.getMessage().getFrom().getId()));
                     if (resultSet2.next())
                         uid = resultSet2.getInt(1);
                     while(!questions.isEmpty()){
                         Question question = questions.get(0);
-                        ResultSet rs = statement.executeQuery("insert into questions(text, subject_id, uid) values ('%s', %d, %d) on conflict do nothing returning id".formatted(question.getQuestion(), subject_id, uid));
+                        ResultSet rs = statement.executeQuery(String.format("insert into questions(text, subject_id, uid) values ('%s', %d, %d) on conflict do nothing returning id", question.getQuestion(), subject_id, uid));
                         if (rs.next()) {
                             int qid = rs.getInt(1);
                             options = question.getOptions();
@@ -112,7 +112,7 @@ public class Quizbot extends TelegramLongPollingBot {
                     e.printStackTrace();
                 }
                 state.put(update.getMessage().getChatId(), "");
-                sendMessage(update.getMessage().getChatId(), translate("Тест по предмету <b>%s</b> добавлен ✅", language.get(chat_id)).formatted(selectedSubject));
+                sendMessage(update.getMessage().getChatId(), String.format(translate("Тест по предмету <b>%s</b> добавлен ✅", language.get(chat_id)), selectedSubject));
             }
             Message message = update.getMessage();
             if (message.hasText()) {
@@ -134,7 +134,7 @@ public class Quizbot extends TelegramLongPollingBot {
                             if (records.next() && records.getBoolean("paid")) {
                                 Statement statement = connection.createStatement();
                                 language.put(message.getChatId(), records.getString("lang"));
-                                ResultSet subs = statement.executeQuery("select name from subjects where lang = '%s'".formatted(language.get(message.getChatId())));
+                                ResultSet subs = statement.executeQuery(String.format("select name from subjects where lang = '%s'", language.get(message.getChatId())));
                                 while (subs.next()) {
                                     String subject = subs.getString("name");
                                     if (subjects.stream().noneMatch(element -> element.getCaption().equals(subject)))
@@ -148,7 +148,7 @@ public class Quizbot extends TelegramLongPollingBot {
                                 sendMessage(message.getChatId(), translate("Пожалуйста, свяжитесь с @meirbnb чтобы приобрести подписку.", language.get(message.getChatId())));
                                 Statement statement = connection.createStatement();
                                 Timestamp timestamp = new Timestamp(new Date().getTime());
-                                statement.execute("insert into users(user_id, username, paid, admin, date) values (%d, '%s', false, false, '%s') on conflict do nothing".formatted(message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
+                                statement.execute(String.format("insert into users(user_id, username, paid, admin, date) values (%d, '%s', false, false, '%s') on conflict do nothing", message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
                             }
                         } catch (SQLException ex) {
                             System.out.println(ex.getMessage());
@@ -215,7 +215,7 @@ public class Quizbot extends TelegramLongPollingBot {
                         }
                         try {
                             Statement statement = connection.createStatement();
-                            statement.execute("update users set paid = false where username = '%s' or user_id = %d".formatted(message.getFrom().getUserName(), message.getFrom().getId()));
+                            statement.execute(String.format("update users set paid = false where username = '%s' or user_id = %d", message.getFrom().getUserName(), message.getFrom().getId()));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -228,7 +228,7 @@ public class Quizbot extends TelegramLongPollingBot {
                                 int uid = 0;
                                 try {
                                     Statement statement = connection.createStatement();
-                                    ResultSet rs = statement.executeQuery("select id from users where username = '%s' or user_id = %d".formatted(message.getFrom().getUserName(), message.getFrom().getId()));
+                                    ResultSet rs = statement.executeQuery(String.format("select id from users where username = '%s' or user_id = %d", message.getFrom().getUserName(), message.getFrom().getId()));
                                     if (rs.next())
                                         uid = rs.getInt(1);
                                     Timestamp timestamp = new Timestamp(new Date().getTime());
@@ -237,7 +237,7 @@ public class Quizbot extends TelegramLongPollingBot {
                                     e.printStackTrace();
                                 }
                             }
-                            sendMessage(message.getChatId(), translate("Предмет <b>%s</b> добавлен ✅", language.get(message.getChatId())).formatted(message.getText()));
+                            sendMessage(message.getChatId(), String.format(translate("Предмет <b>%s</b> добавлен ✅", language.get(message.getChatId())), message.getText()));
                             sendMessage(message.getChatId(), translate("\uD83D\uDCDA Выберите предмет:", language.get(message.getChatId())), buildMarkup(subjects, 1));
                             state.put(message.getChatId(), "");
                         } else if (!state.isEmpty() && state.get(message.getChatId()).contains("waiting4fix")){
@@ -255,10 +255,10 @@ public class Quizbot extends TelegramLongPollingBot {
                             }
                             try {
                                 Statement statement = connection.createStatement();
-                                ResultSet rs = statement.executeQuery("select id from users where username = '%s' or user_id = %d".formatted(message.getFrom().getUserName(), message.getFrom().getId()));
+                                ResultSet rs = statement.executeQuery(String.format("select id from users where username = '%s' or user_id = %d", message.getFrom().getUserName(), message.getFrom().getId()));
                                 if (rs.next()) {
                                     Timestamp today = new Timestamp(new Date().getTime());
-                                    statement.execute("insert into reports(qid, fix, new_value, uid, added_date) values (%d, '%s', '%s', %d, '%s')".formatted(qid, fixtype, correction, rs.getInt(1), today));
+                                    statement.execute(String.format("insert into reports(qid, fix, new_value, uid, added_date) values (%d, '%s', '%s', %d, '%s')", qid, fixtype, correction, rs.getInt(1), today));
                                 }
                             } catch (SQLException e) {
                                 e.printStackTrace();
@@ -304,20 +304,20 @@ public class Quizbot extends TelegramLongPollingBot {
                 try {
                     Statement statement = connection.createStatement();
                     int uid = 0, sid = 0;
-                    ResultSet rs = statement.executeQuery("select id from users where username = '%s' and user_id = %d".formatted(message.getChat().getUserName(), message.getChat().getId()));
+                    ResultSet rs = statement.executeQuery(String.format("select id from users where username = '%s' and user_id = %d", message.getChat().getUserName(), message.getChat().getId()));
                     if (rs.next())
                         uid = rs.getInt(1);
-                    ResultSet rs2 = statement.executeQuery("select id from subjects where name = '%s'".formatted(lastSelected.get(chat_id)));
+                    ResultSet rs2 = statement.executeQuery(String.format("select id from subjects where name = '%s'", lastSelected.get(chat_id)));
                     if (rs2.next())
                         sid = rs2.getInt(1);
-                    ResultSet rs3 = statement.executeQuery("select * from stats where uid = %d and sid = %d".formatted(uid, sid));
+                    ResultSet rs3 = statement.executeQuery(String.format("select * from stats where uid = %d and sid = %d", uid, sid));
                     if (rs3.next()){
                         // String today   = timestamp.toLocalDateTime().toLocalDate().toString();
                         // String lastday = rs3.getDate("date").toLocalDate().toString();
                         //if (!lastday.equals(today))
                         int currentPoints = rs3.getInt("points");
                         int currentNo = rs3.getInt("no");
-                        statement.execute("update stats set points = %d, date = '%s', no = %d where uid = %d and sid = %d".formatted(currentPoints + percentage, timestamp, currentNo + 1, uid, sid));
+                        statement.execute(String.format("update stats set points = %d, date = '%s', no = %d where uid = %d and sid = %d", currentPoints + percentage, timestamp, currentNo + 1, uid, sid));
                     } else statement.execute(String.format("insert into stats(uid, points, date, sid, no) values (%d, %d, '%s', %d, %d)", uid, percentage, timestamp, sid, 1));
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -345,7 +345,7 @@ public class Quizbot extends TelegramLongPollingBot {
                             return;
                         List<Question> test = LoadTest(callbackQuery.getFrom().getId(), selectedSubject, language.get(chat_id));
                         if (test.isEmpty()){
-                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("Тесты по предмету <b>%s</b> не найдены.\nОбратитесь к своему преподавателю", language.get(chat_id)).formatted(selectedSubject), null);
+                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), String.format(translate("Тесты по предмету <b>%s</b> не найдены.\nОбратитесь к своему преподавателю", language.get(chat_id)), selectedSubject), null);
                             return;
                         }
                         quiz.put(chat_id, test);
@@ -375,13 +375,13 @@ public class Quizbot extends TelegramLongPollingBot {
                             connection = database.connect();
                         try {
                             Statement statement = connection.createStatement();
-                            statement.execute("delete from subjects where name = '%s'".formatted(selectedSubject));
+                            statement.execute(String.format("delete from subjects where name = '%s'", selectedSubject));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
                         String finalSelectedSubject = selectedSubject;
                         subjects.removeIf(element -> element.getCaption().equals(finalSelectedSubject));
-                        editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("Предмет <b>%s</b> удалён ✅", language.get(chat_id)).formatted(selectedSubject), null);
+                        editMessage(chat_id, callbackQuery.getMessage().getMessageId(), String.format(translate("Предмет <b>%s</b> удалён ✅", language.get(chat_id)), selectedSubject), null);
                         sendMessage(chat_id, translate("\uD83D\uDCDA Выберите предмет:", language.get(chat_id)), buildMarkup(subjects, 1));
 
                     } else if (queryData.equals("add2")){
@@ -434,11 +434,11 @@ public class Quizbot extends TelegramLongPollingBot {
                     } else if (queryData.equals("changeLang")){
                         callbackQuery = update.getCallbackQuery();
                         if (selectedSubject.equals("rus"))
-                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Функция изменение языка работы бота будет скоро добавлена!\nПросим извинения за неудобства. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
+                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), String.format(translate("<b>Функция изменение языка работы бота будет скоро добавлена!\nПросим извинения за неудобства. /start</b>", language.get(chat_id)), language.get(chat_id)), null);
                         else if (selectedSubject.equals("eng"))
-                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Changing language of the bot will be available soon.\nSorry for causing inconveniences. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
+                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), String.format(translate("<b>Changing language of the bot will be available soon.\nSorry for causing inconveniences. /start</b>", language.get(chat_id)), language.get(chat_id)), null);
                         else
-                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), translate("<b>Тілді өзгерту жақын арада мүмкін болады.\nҚолайсыздықтар үшін кешірім сұраймыз. /start</b>", language.get(chat_id)).formatted(language.get(chat_id)), null);
+                            editMessage(chat_id, callbackQuery.getMessage().getMessageId(), String.format(translate("<b>Тілді өзгерту жақын арада мүмкін болады.\nҚолайсыздықтар үшін кешірім сұраймыз. /start</b>", language.get(chat_id)), language.get(chat_id)), null);
                     } else if (queryData.equals("stats")){
                         if (subjects.isEmpty())
                             return;
@@ -613,10 +613,10 @@ public class Quizbot extends TelegramLongPollingBot {
                 connection = database.connect();
             Statement statement = connection.createStatement();
             int subject_id = 0;
-            ResultSet rs = statement.executeQuery("select id from subjects where name = '%s' and lang = '%s'".formatted(subject, lang));
+            ResultSet rs = statement.executeQuery(String.format("select id from subjects where name = '%s' and lang = '%s'", subject, lang));
             if (rs.next())
                 subject_id = rs.getInt(1);
-            ResultSet questionsList = statement.executeQuery("select * from questions where subject_id = %d order by random() limit 15".formatted(subject_id));
+            ResultSet questionsList = statement.executeQuery(String.format("select * from questions where subject_id = %d order by random() limit 15", subject_id));
             PreparedStatement preparedStatement = connection.prepareStatement("select * from options where qid = ?");
             while(questionsList.next()){
                 long id = questionsList.getLong(1);
@@ -652,7 +652,7 @@ public class Quizbot extends TelegramLongPollingBot {
             ResultSet userInfo = statement.executeQuery("select id from users where user_id = " + user_id);
             if (userInfo.next()){
                 int uid = userInfo.getInt(1);
-                ResultSet subjectInfo = statement.executeQuery("select id from subjects where name = '%s'".formatted(subject));
+                ResultSet subjectInfo = statement.executeQuery(String.format("select id from subjects where name = '%s'", subject));
                 if (subjectInfo.next()){
                     int sid = subjectInfo.getInt(1);
                     ResultSet statsInfo = statement.executeQuery(String.format("select * from stats where uid = %d and sid = %d", uid, sid));
