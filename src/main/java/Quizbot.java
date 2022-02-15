@@ -148,7 +148,7 @@ public class Quizbot extends TelegramLongPollingBot {
                             } else {
                                 sendMessage(message.getChatId(), translate("Пожалуйста, свяжитесь с @meirbnb чтобы приобрести подписку.", language.get(message.getChatId())));
                                 Timestamp timestamp = new Timestamp(new Date().getTime());
-                                statement.execute(String.format("insert into users(user_id, username, paid, admin, date) values (%d, '%s', true, false, '%s') on conflict do nothing", message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
+                                statement.execute(String.format("insert into users(user_id, username, paid, admin, date) values (%d, '%s', false, false, '%s') on conflict do nothing", message.getFrom().getId(), message.getFrom().getUserName(), timestamp));
                             }
                         } catch (SQLException ex) {
                             System.out.println(ex.getMessage());
