@@ -5,7 +5,7 @@
 
 <img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" width = "250" height = "470" hspace = "20"/>
  
-<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" width = "250" height = "470"/>
+<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image7.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image7.png" width = "250" height = "470"/>
 </p>
 
 This is a telegram bot programmed in Java. It helps school
