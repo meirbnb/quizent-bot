@@ -1,6 +1,8 @@
 # quizent-bot
 Telegram bot that helps school students prepare for UNT
 
+<img src="https://github.com/meirbnb/quizent_bot/blob/main/screenshots/qr.jpg" data-canonical-src="https://github.com/meirbnb/quizent_bot/blob/main/screenshots/qr.jpg" width="340" height="500" />
+
 This is a telegram bot programmed in Java. It helps school
 students prepare for their UNT (EHT) testing by providing various tests of several subjects. By this
 bot, students will be able to pass quizzes and receive their results and overall progress. I decided
