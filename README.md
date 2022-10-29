@@ -1,5 +1,4 @@
-# quizent-bot
-Telegram bot that helps school students prepare for UNT
+# Telegram bot that helps school students prepare for UNT
 
 <p>
 <img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image4.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image4.png" width = "250" height = "470" hspace = "25"/>
