@@ -8,4 +8,4 @@ to make this project because students struggle to find relevant questions and al
 to make such a tool where it will be convenient for both instructors as well as students. Hence, students 
 will buy subscriptions using our bot and will get the opportunity to use this bot with thousands of UNT (EHT) questions.
 
-Link to the bot: (https://t.me/quizent_bot)[@quizent_bot]
+Link to the bot: [@quizent_bot](https://t.me/quizent_bot)
