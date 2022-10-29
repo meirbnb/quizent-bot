@@ -1,0 +1,8 @@
+﻿Midterm Project
+
+My project is called Quizent. This is a telegram bot programmed in Java. It helps school students prepare for their UNT (EHT) testing by providing various tests of several subjects. By this bot, students will be able to pass quizzes and receive their results and overall progress. I decided to make this project because students struggle to find relevant questions and also teachers asked me to make such a tool where it will be convenient for both instructors as well as students. Therefore I consider this project as comercial one and the monetization model will be based on monthly subscriptions. Hence, students will buy subscriptions using this bot and will get the opportunity to use my bot with thousands of UNT (EHT) questions.
+      
+
+
+
+
