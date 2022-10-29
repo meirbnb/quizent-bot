@@ -2,11 +2,11 @@
 Telegram bot that helps school students prepare for UNT
 
 <p>
-<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" width = "150" height = "300" hspace = "50"/>
+<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image5.png" width = "200" height = "350" hspace = "50"/>
   
   
   
-<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" width = "150" height = "300"/>
+<img src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" data-canonical-src="https://github.com/meirbnb/quizent-bot/blob/main/screenshots/Image6.png" width = "200" height = "350"/>
 </p>
 
 This is a telegram bot programmed in Java. It helps school
