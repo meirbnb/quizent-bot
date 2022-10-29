@@ -48,7 +48,7 @@ public class Quizbot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "5070995738:AAEfYVhJDBnc2Qa14TlwsUUYR9z2tFAz3oE";
+        return "7777777777:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     }
 
     @Override
@@ -681,40 +681,4 @@ public class Quizbot extends TelegramLongPollingBot {
  */
         return text;
     }
-
-    private final Map<String, String> kazakhTranslations = Stream.of(new String[][] {
-            {"Subject test <b>%s</b> was added ✅", "<b>%s</b> пәнінен тест жүктелді ✅"}, // пример
-            {"Start the bot", "Ботты бастау"},
-            {"My progress", "Менің прогрессім"},
-            {"Show rating", "Рейтингті көрсету"},
-            {"Change language", "Тілді ауыстыру"},
-            {"<b>Выбранный язык: </b>%s\n\n<i>Просим перезапустить бот: /restart</i>", "<b>Выбранный язык: </b>%s\n\n<i>Ботты келесі команда арқылы қайта жүкте қажет: /restart</i>"},
-            {"Cancel subscription", "Жазылымнан бастарту"},
-            {"📝 Select subject:", "📝 Пәнді таңдаңыз:"},
-            {"Add subject", "Жаңа пән ашу"},
-            {"Remove subject", "Пәнді жояу"},
-            {"<b>\uD83D\uDCDD Subject:</b> ", "<b>\uD83D\uDCDD Пән:</b> "},
-            {"Subject <b>%s</b> was added", "<b>%s</b> пәні ашылды"},
-            {"Subject <b>%s</b> was removed", "<b>%s</b> пәні жойылды"},
-            {"Please, contact @admin to purchase subscription", "Жазылымды алу үшін @admin ге жазыңыз"},
-            {"Your report is accepted and will be considered by moderators ✅", "Сіздің сұранысыңыз модераторларға жіберілді ✅"},
-            {"<b>📊 Result:</b>", "<b>📊 Нәтиже:</b>"},
-            {" out of ", "/"},
-            {"\n<b>⏱️ Time taken: </b>", "\n<b>⏱️ Өткен уақыт: </b>"},
-            {" min. ", " мин."},
-            {" sec. ", " сек."},
-            {"Please, send the test in DOCX format using the attached sample", "Тестті жоғарыдағы үлгіге сүйене отырып DOCX форматында жіберіңіз"},
-            {"✏️ Enter subject name:", "✏️ Пәннің атауын еңгізіңіз:"},
-            {"Change question", "Сұрақты түзету"},
-            {"Change answer", "Жауапты түзету"},
-            {"<b>Question: </b>", "<b>Сұрақ: </b>"},
-            {"\n<b>Answer: </b>", "\n<b>Жауап: </b>"},
-            {"\n\n<i>Enter correct question:</i>", "\n\n<i>Дұрыс сұрақты еңгізіңіз:</i>"},
-            {"\n\n<i>Enter correct answer for the question:</i>", "\n\n<i>Дұрыс жауапты еңгізіңіз:</i>"},
-            {"Start the test", "Тестілеуді бастау"},
-            {"Tests on <b>%s</b> were not found.\nContact your teacher", "<b>%s</b> пәні бойынша тесттер табылмады.\nАдминистраторға жазуыңызды сұраймыз."},
-            {"Add test", "Тест қосу"},
-            {"Statistics", "Статистика"},
-            {"Report a mistake", "Аппеляция"},
-    }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 }
